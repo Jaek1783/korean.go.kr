@@ -4,7 +4,7 @@ import { parseStringPromise } from "xml2js";
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const word = searchParams.get("word");
-
+console.log(word);
   if (!word) {
     return NextResponse.json({ error: "단어를 제공해야 합니다." }, { status: 400 });
   }
@@ -14,7 +14,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "API 키가 설정되지 않았습니다." }, { status: 500 });
   }
 
-  const BASE_URL = "https://krdict.korean.go.kr/api/search";
+  const BASE_URL = "https://stdict.korean.go.kr/api/search.do";
 
   try {
     const response = await fetch(

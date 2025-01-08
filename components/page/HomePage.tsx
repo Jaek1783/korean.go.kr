@@ -35,32 +35,31 @@ export default function Home() {
   const handleSearch = async () => {
     setError(null);
     setResults(null);
-
+  
     if (words.length === 0) {
       setError("엑셀 파일에서 단어를 불러오세요.");
       return;
     }
-
+  
     try {
-      const searchResults: DictionaryItem[] = [];
-      for (const word of words) {
-        const response = await fetch(`/api/korean-dictionary?word=${encodeURIComponent(word)}`);
-        console.log(words);
-        if (!response.ok) {
-          throw new Error("API 요청 실패");
-        }
-
-        const data = await response.json();
-        if (data.item) {
-          searchResults.push(...data.item);
-        }
+      const response = await fetch('/api/korean-dictionary', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ words }),
+      });
+  
+      if (!response.ok) {
+        throw new Error("API 요청 실패");
       }
-      setResults(searchResults);
+  
+      const data = await response.json();
+      setResults(data.items); // API 응답에 따라 수정
     } catch (error) {
       console.error("검색 중 오류:", error);
       setError("단어 검색 중 오류가 발생했습니다.");
     }
   };
+  
 
   return (
     <div style={{ padding: "20px" }}>
