@@ -44,7 +44,7 @@ export default function Home() {
     try {
       const searchResults: DictionaryItem[] = [];
       for (const word of words) {
-        const response = await fetch(`/api/korean-dictionary?word='${encodeURIComponent(word)}'`);
+        const response = await fetch(`/api/korean-dictionary?word=${encodeURIComponent(word)}`);
         console.log(word);
         console.log(response);
         if (!response.ok) {
