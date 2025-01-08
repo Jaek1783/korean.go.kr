@@ -4,19 +4,18 @@ import * as XLSX from "xlsx";
 import { DictionaryItem } from "../types/koreanDictionary";
 
 export default function Home() {
-  const [file, setFile] = useState<File | null>(null);
   const [words, setWords] = useState<string[]>([]);
   const [results, setResults] = useState<DictionaryItem[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = e.target.files?.[0];
+    console.log(uploadedFile)
     if (uploadedFile) {
-      setFile(uploadedFile);
       readExcelFile(uploadedFile);
     }
   };
-console.log(file);
+
   const readExcelFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -70,7 +69,7 @@ console.log(file);
       <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
       {words.length > 0 && (
         <p>
-          {words.length}개의 단어를 불러왔습니다. <button onClick={handleSearch}>검색 시작</button>
+          {words.length -1}개의 단어를 불러왔습니다. <button onClick={handleSearch}>검색 시작</button>
         </p>
       )}
 
