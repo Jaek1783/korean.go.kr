@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
+import { parseStringPromise } from "xml2js";
 
-export const GET = async (req:NextRequest): Promise<NextResponse> => {
+export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const word = searchParams.get("word");
 
@@ -20,21 +21,27 @@ export const GET = async (req:NextRequest): Promise<NextResponse> => {
       `${BASE_URL}?key=${API_KEY}&q=${encodeURIComponent(word)}&part=word&type_search=json`
     );
 
-    if (!response.ok) {
-      console.error(`API 호출 실패: ${response.status} ${response.statusText}`);
-      return NextResponse.json({ error: "API 호출 실패" }, { status: response.status });
+    const contentType = response.headers.get("content-type");
+
+    let data;
+    if (contentType?.includes("application/json")) {
+      // JSON 응답 처리
+      data = await response.json();
+    } else if (contentType?.includes("application/xml") || contentType?.includes("text/xml")) {
+      // XML 응답 처리
+      const xmlText = await response.text();
+      data = await parseStringPromise(xmlText, { explicitArray: false });
+    } else {
+      throw new Error("지원되지 않는 응답 형식입니다.");
     }
 
-    const data = await response.json();
-
-    if (!data || !data.item) {
+    if (!data || !data.channel?.item) {
       return NextResponse.json({ error: "API 응답 데이터가 올바르지 않습니다." }, { status: 500 });
     }
 
-    return NextResponse.json(data);
+    return NextResponse.json(data.channel.item);
   } catch (error) {
     console.error("API 요청 오류:", error);
     return NextResponse.json({ error: "API 요청 중 오류가 발생했습니다." }, { status: 500 });
   }
 }
-export const dynamic = "force-dynamic";
