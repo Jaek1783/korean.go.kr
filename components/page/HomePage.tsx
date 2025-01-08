@@ -44,7 +44,10 @@ export default function Home() {
     try {
       const searchResults: DictionaryItem[] = [];
       for (const word of words) {
-        const response = await fetch(`/api/korean-dictionary?word=${encodeURIComponent(word)}`);
+        const response = await fetch(`/api/korean-dictionary?word=${encodeURIComponent(word)}`,{
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' }
+        });
         // console.log(words);
         if (!response.ok) {
           throw new Error("API 요청 실패");
