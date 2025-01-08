@@ -1,47 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
-import { parseStringPromise } from "xml2js";
 
-export async function GET(req: NextRequest) {
-  const { searchParams } = new URL(req.url);
-  const word = searchParams.get("word");
-console.log(word);
-  if (!word) {
-    return NextResponse.json({ error: "단어를 제공해야 합니다." }, { status: 400 });
-  }
+// 표준국어대사전 데이터 요청(json)
+export async function GET(request: NextRequest) {
+  const searchParams = request.nextUrl.searchParams;
+  const query = searchParams.get("query");
+  console.log("query", query);
 
-  const API_KEY = process.env.KOREAN_DICT_API_KEY;
-  if (!API_KEY) {
-    return NextResponse.json({ error: "API 키가 설정되지 않았습니다." }, { status: 500 });
-  }
+  const params = new URLSearchParams({
+    key: process.env.NEXT_PUBLIC_STDICT_API_KEY!, // 환경변수에 타입 단언 추가
+    q: query ?? "", // null 병합 연산자로 기본값 처리
+    req_type: "json"
+  });
+  console.log("params", params);
 
-  const BASE_URL = "https://stdict.korean.go.kr/api/search.do";
+  const url = `https://stdict.korean.go.kr/api/search.do?${params}`;
+  console.log(url);
 
   try {
-    const response = await fetch(
-      `${BASE_URL}?key=${API_KEY}&q=${encodeURIComponent(word)}&part=word&type_search=json`
-    );
+    const response = await fetch(url);
+    const data = await response.json();
+    console.log("data", data);
 
-    const contentType = response.headers.get("content-type");
-
-    let data;
-    if (contentType?.includes("application/json")) {
-      // JSON 응답 처리
-      data = await response.json();
-    } else if (contentType?.includes("application/xml") || contentType?.includes("text/xml")) {
-      // XML 응답 처리
-      const xmlText = await response.text();
-      data = await parseStringPromise(xmlText, { explicitArray: false });
-    } else {
-      throw new Error("지원되지 않는 응답 형식입니다.");
-    }
-
-    if (!data || !data.channel?.item) {
-      return NextResponse.json({ error: "API 응답 데이터가 올바르지 않습니다." }, { status: 500 });
-    }
-
-    return NextResponse.json(data.channel.item);
+    return NextResponse.json(data);
   } catch (error) {
-    console.error("API 요청 오류:", error);
-    return NextResponse.json({ error: "API 요청 중 오류가 발생했습니다." }, { status: 500 });
+    return console.error("실패:", error);
   }
 }
