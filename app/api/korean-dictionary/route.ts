@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-export async function GET(req: NextRequest) {
+export const GET = async (req:NextRequest): Promise<NextResponse> => {
   const { searchParams } = new URL(req.url);
   const word = searchParams.get("word");
 
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
-console.log(data);
+
     if (!data || !data.item) {
       return NextResponse.json({ error: "API 응답 데이터가 올바르지 않습니다." }, { status: 500 });
     }
@@ -37,3 +37,4 @@ console.log(data);
     return NextResponse.json({ error: "API 요청 중 오류가 발생했습니다." }, { status: 500 });
   }
 }
+export const dynamic = "force-dynamic";
