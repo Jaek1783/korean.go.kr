@@ -16,7 +16,7 @@ export default function Home() {
       readExcelFile(uploadedFile);
     }
   };
-
+console.log(file);
   const readExcelFile = (file: File) => {
     const reader = new FileReader();
     reader.onload = (e) => {
