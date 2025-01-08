@@ -26,7 +26,7 @@ export async function GET(req: NextRequest) {
     }
 
     const data = await response.json();
-
+console.log(data);
     if (!data || !data.item) {
       return NextResponse.json({ error: "API 응답 데이터가 올바르지 않습니다." }, { status: 500 });
     }
