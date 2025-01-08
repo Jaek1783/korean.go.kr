@@ -16,7 +16,9 @@ export async function GET(req: NextRequest) {
   const BASE_URL = "https://krdict.korean.go.kr/api/search";
 
   try {
-    const response = await fetch(`${BASE_URL}?key=${API_KEY}&q=${encodeURIComponent(word)}&part=word`);
+    const response = await fetch(
+      `${BASE_URL}?key=${API_KEY}&q=${encodeURIComponent(word)}&part=word&type_search=json`
+    );
 
     if (!response.ok) {
       console.error(`API 호출 실패: ${response.status} ${response.statusText}`);
