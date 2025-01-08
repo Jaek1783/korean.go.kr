@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { parseStringPromise } from "xml2js";
 
-export async function GET(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const word = searchParams.get("word");
 console.log(word);
