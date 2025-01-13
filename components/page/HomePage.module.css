@@ -1,0 +1,68 @@
+.allWrap{
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+}
+.result {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  margin:10px;
+}
+
+.result tr {
+  border:1px solid #000;
+}
+.result th {
+  padding:8px;
+  border:1px solid #000;
+}
+.logo span {
+  font-weight:bold;
+  text-align:center;
+  display:inline-block;
+  width:100%;
+  font-size:20px;
+  padding:10px;
+}
+
+/* 스피너 */
+.loader{
+  display: block;
+  position: relative;
+  height: 12px;
+  width: 80%;
+  background: 1px rgb(201, 201, 201);
+  border-radius: 10px;
+  overflow: hidden;
+}
+.loader::after {
+  content: '';
+  width: 40%;
+  height: 100%;
+  background: #FF3D00;
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  animation: animloader 3s linear infinite;
+}
+
+@keyframes animloader {
+  0% {
+    left: 0;
+    transform: translateX(-100%);
+  }
+  100% {
+    left: 100%;
+    transform: translateX(0%);
+  }
+}
+
+.result td {
+  border:1px solid #000;
+  padding:8px;
+}
+
